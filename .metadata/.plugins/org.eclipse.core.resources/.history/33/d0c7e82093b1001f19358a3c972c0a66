@@ -1,0 +1,76 @@
+package stepDefinitions;
+import io.cucumber.java.en.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.junit.Assert;
+import pageobjects.GmailComposePage;
+
+public class ComposeSteps {
+	WebDriver driver;
+    GmailComposePage composePage;
+
+    @Given("the user is logged into Gmail")
+    public void userIsLoggedIn() {
+        // Initialize WebDriver and navigate to Gmail (mock example)
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.get("https://mail.google.com/");
+        // Assuming login actions are already performed manually for this example
+        composePage = new GmailComposePage(driver);
+    }
+
+    @When("the user composes an email with subject {string} and body {string}")
+    public void composeEmail(String subject, String body) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient("test@example.com");
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @When("the user composes an email with no subject and body {string}")
+    public void composeEmailNoSubject(String body) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient("test@example.com");
+        composePage.enterBody(body);
+    }
+
+    @When("the user composes an email with subject {string} and no recipient")
+    public void composeEmailNoRecipient(String subject) {
+        composePage.clickComposeButton();
+        composePage.enterSubject(subject);
+        composePage.enterBody("Test email with no recipient");
+    }
+
+    @When("the user composes an email with subject {string} and body {string} and the recipient is {string}")
+    public void composeEmailInvalidRecipient(String subject, String body, String recipient) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient(recipient);
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @Then("the email should be sent successfully")
+    public void emailSentSuccessfully() {
+        composePage.clickSendButton();
+        // Verification can be added here to validate email sent (e.g., confirmation message)
+        driver.quit();
+    }
+
+    @Then("the system should display an error indicating {string}")
+    public void systemDisplaysError(String errorMessage) {
+        WebElement errorPopup = driver.findElement(By.xpath("//span[contains(text(),'" + errorMessage + "')]"));
+        Assert.assertTrue(errorPopup.isDisplayed());
+        driver.quit();
+    }
+
+    @Then("the system should display a warning about the missing subject")
+    public void systemDisplaysSubjectWarning() {
+        composePage.clickSendButton();
+        WebElement warningPopup = driver.findElement(By.xpath("//span[contains(text(),'without a subject')]"));
+        Assert.assertTrue(warningPopup.isDisplayed());
+        driver.quit();
+    }
+
+}

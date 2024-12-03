@@ -1,0 +1,25 @@
+package testRunner;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import org.testng.annotations.DataProvider;
+import io.cucumber.testng.CucumberOptions;
+
+
+@CucumberOptions(
+	    features = ".//Features/compose.feature",
+	    glue = "stepdefinitions",
+	    plugin = {
+	        "pretty", 
+	        "html:target/cucumber-reports/report.html", 
+	        "json:target/cucumber-reports/Cucumber.json"
+	    }, // Plugins for reports
+	    monochrome = true // Make the console output more readable
+	)
+	public class ComposeGmailTestRunner extends AbstractTestNGCucumberTests {
+
+	    @Override
+	    @DataProvider(parallel = true)
+	    public Object[][] scenarios() {
+	        return super.scenarios();
+	    }
+	}

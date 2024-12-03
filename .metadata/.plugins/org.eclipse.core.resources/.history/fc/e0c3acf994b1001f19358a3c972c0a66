@@ -1,0 +1,31 @@
+package stepDefinitions;
+import io.cucumber.java.en.*;
+import pageobjects.GmailComposePage;
+
+public class ComposeSteps {
+    GmailComposePage composePage;
+
+    @Given("the user is logged into Gmail")
+    public void userIsLoggedIn() {
+        composePage = new GmailComposePage();
+        composePage.navigateToGmail();
+        // Add login actions if necessary
+    }
+
+    @When("the user composes an email with subject {string} and body {string}")
+    public void composeEmail(String subject, String body) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient("test@example.com");
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @Then("the email should be sent successfully")
+    public void emailSentSuccessfully() {
+        composePage.clickSendButton();
+        // Validation steps for successful email
+        composePage.quitDriver();
+    }
+    }
+
+}

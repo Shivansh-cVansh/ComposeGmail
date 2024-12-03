@@ -1,0 +1,17 @@
+package testRunner;
+import org.junit.runner.RunWith;
+import cucumber.junit.Cucumber;
+import cucumber.api.CucumberOptions;
+
+@RunWith(Cucumber.class) // This annotation tells JUnit to run Cucumber tests
+@CucumberOptions(
+    features = "src/test/resources/features", // Path to your feature files
+    glue = "stepdefinitions", // Path to your step definition files
+    plugin = {"pretty", "html:target/cucumber-reports/report.html"}, // Generate reports in HTML format
+    monochrome = true, // Makes console output more readable
+    dryRun = false // If set to true, checks if feature file and step definitions are correct (without executing tests)
+)
+
+public class ComposeGmailTestRunner {
+
+}

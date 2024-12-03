@@ -1,0 +1,43 @@
+#Author: your.email@your.domain.com
+#Keywords Summary :
+#Feature: List of scenarios.
+#Scenario: Business rule through list of steps with arguments.
+#Given: Some precondition step
+#When: Some key actions
+#Then: To observe outcomes or validation
+#And,But: To enumerate more Given,When,Then steps
+#Scenario Outline: List of steps for data-driven as an Examples and <placeholder>
+#Examples: Container for s table
+#Background: List of steps run before each of the scenarios
+#""" (Doc Strings)
+#| (Data Tables)
+#@ (Tags/Labels):To group Scenarios
+#<> (placeholder)
+#""
+## (Comments)
+#Sample Feature Definition Template
+Feature: Gmail Compose Email Functionality
+
+  # Positive Scenario
+  Scenario: User sends an email successfully
+    Given the user is logged into Gmail
+    When the user composes an email with subject "Incubyte" and body "QA test for Incubyte"
+    Then the email should be sent successfully
+
+  # Negative Scenarios
+  Scenario: User tries to send an email without a recipient
+    Given the user is logged into Gmail
+    When the user composes an email with subject "No Recipient" and body "Test email with no recipient"
+    Then the system should display an error indicating "Please specify at least one recipient."
+
+  Scenario: User tries to send an email without a subject
+    Given the user is logged into Gmail
+    When the user composes an email with no subject and body "Test email with no subject"
+    Then the system should display a warning about the missing subject.
+
+  Scenario: User tries to send an email with an invalid recipient
+    Given the user is logged into Gmail
+    When the user composes an email with subject "Invalid Recipient" and body "Testing invalid recipient"
+    And the recipient is "invalid-email@"
+    Then the system should display an error indicating "Invalid email address."
+

@@ -1,0 +1,85 @@
+package stepDefinitions;
+import io.cucumber.java.en.*;
+import org.openqa.selenium.WebDriver;
+import pageObjects.GmailComposePage;
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+public class ComposeSteps {
+	WebDriver driver;
+    GmailComposePage composePage;
+
+ // Positive Scenario
+    @Given("the user is logged into Gmail")
+    public void userIsLoggedIn() {
+        // Initialize WebDriver and navigate to Gmail
+        composePage = new GmailComposePage();
+        composePage.navigateToGmail();
+        // Add login actions if necessary (like username and password fields)
+    }
+
+    @When("the user composes an email with subject {string} and body {string}")
+    public void composeEmail(String subject, String body) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient("test@example.com");
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @Then("the email should be sent successfully")
+    public void emailSentSuccessfully() {
+        composePage.clickSendButton();
+        // Verifying the email is sent successfully (you can enhance this by checking for success messages or confirmation)
+        WebElement confirmationMessage = driver.findElement(By.xpath("//span[text()='Message sent.']"));
+        Assert.assertTrue("Email was not sent successfully", confirmationMessage.isDisplayed());
+        composePage.quitDriver();
+    }
+
+    // Negative Scenario 1: User tries to send an email without a recipient
+    @When("the user composes an email with no recipient and subject {string} and body {string}")
+    public void composeEmailNoRecipient(String subject, String body) {
+        composePage.clickComposeButton();
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @Then("the system should display an error indicating {string}")
+    public void systemDisplaysError(String errorMessage) {
+        WebElement errorPopup = driver.findElement(By.xpath("//span[contains(text(),'" + errorMessage + "')]"));
+        Assert.assertTrue(errorPopup.isDisplayed());
+        composePage.quitDriver();
+    }
+
+    // Negative Scenario 2: User tries to send an email without a subject
+    @When("the user composes an email with no subject and body {string}")
+    public void composeEmailNoSubject(String body) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient("test@example.com");
+        composePage.enterBody(body);
+    }
+
+    @Then("the system should display a warning about the missing subject")
+    public void systemDisplaysSubjectWarning() {
+        WebElement warningPopup = driver.findElement(By.xpath("//span[contains(text(),'without a subject')]"));
+        Assert.assertTrue(warningPopup.isDisplayed());
+        composePage.quitDriver();
+    }
+
+    // Negative Scenario 3: User tries to send an email with an invalid recipient
+    @When("the user composes an email with subject {string} and body {string} and the recipient is {string}")
+    public void composeEmailInvalidRecipient(String subject, String body, String recipient) {
+        composePage.clickComposeButton();
+        composePage.enterRecipient(recipient);
+        composePage.enterSubject(subject);
+        composePage.enterBody(body);
+    }
+
+    @Then("the system should display an error indicating invalid email address")
+    public void systemDisplaysInvalidEmailError() {
+        WebElement errorPopup = driver.findElement(By.xpath("//span[contains(text(),'Invalid email address')]"));
+        Assert.assertTrue(errorPopup.isDisplayed());
+        composePage.quitDriver();
+    }
+
+}
